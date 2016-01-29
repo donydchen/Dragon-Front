@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="13.2">
+  <zoom_level>10</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>390</x>
+      <y>300</y>
+      <w>250</w>
+      <h>170</h>
+    </coordinates>
+    <panel_attributes>symbols::Type
+--
++width: int
++Int: Type
++Float: Type
++Char: Type
++Bool: Type
+--
++Type(s: String, int tag, int width)
++numeric(p: Type): boolean
++max(p1: Type, p2: Type): Type
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>720</x>
+      <y>290</y>
+      <w>210</w>
+      <h>170</h>
+    </coordinates>
+    <panel_attributes>lexer::Word
+--
++lexeme: String
++and: Word
++or: Word
++eq: Word
+……
++temp: Word
+--
++Word(s: String, tag: int)
++toString(): String
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>630</x>
+      <y>380</y>
+      <w>110</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
+    <additional_attributes>90.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>220</x>
+      <y>120</y>
+      <w>250</w>
+      <h>130</h>
+    </coordinates>
+    <panel_attributes>symbols::Env
+--
+-table: Hashtable
+#prev: Env
+--
++Env(n: Env)
++put(w: Token, i: Id)
++get(w: Token): id</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>60</x>
+      <y>330</y>
+      <w>250</w>
+      <h>110</h>
+    </coordinates>
+    <panel_attributes>symbols::Array
+--
++of: Type
++size: int
+--
++Array(sz: int, p: Type)
++toString(): String</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>300</x>
+      <y>370</y>
+      <w>110</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
+    <additional_attributes>90.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>30</x>
+      <y>50</y>
+      <w>650</w>
+      <h>480</h>
+    </coordinates>
+    <panel_attributes>symbols</panel_attributes>
+    <additional_attributes/>
+  </element>
+</diagram>
