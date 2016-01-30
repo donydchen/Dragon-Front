@@ -1,5 +1,10 @@
 package lexer;
 
+/**
+ * 定义终结符对应的常量。包括保留字，标识符等。其中ID指的是标识符。
+ * 
+ *
+ */
 public class Tag {
 
    public final static int
