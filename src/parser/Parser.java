@@ -1,31 +1,64 @@
 package parser;
 import java.io.*; import lexer.*; import symbols.*; import inter.*;
-
+/**
+ * 语法生成器，采用递归下降方法。
+ *
+ */
 public class Parser {
-
-   private Lexer lex;    // lexical analyzer for this parser
-   private Token look;   // lookahead tagen
-   Env top = null;       // current or top symbol table
-   int used = 0;         // storage used for declarations
+   /**
+    * lexical analyzer for this parser
+    */
+   private Lexer lex;    
+   /**
+    * lookahead token
+    */
+   private Token look;   
+   /**
+    * current or top symbol table
+    */
+   Env top = null;       
+   /**
+    * storage used for declarations
+    */
+   int used = 0;         
 
    public Parser(Lexer l) throws IOException { lex = l; move(); }
-
+   /**
+    * 读取下一个词法单元，保存到look中。
+    * @throws IOException
+    */
    void move() throws IOException { look = lex.scan(); }
-
-   void error(String s) { throw new Error("near line "+lex.line+": "+s); }
-
+   /**
+    * 打印错误信息。
+    * @param s 出错语句。
+    */
+   void error(String s) { throw new Error("near line "+Lexer.line+": "+s); }
+   /**
+    * 判断读取的词法单元的tag是否与预期相同，相同则继续读取下一个，否则报语法错误
+    * @param t 预期词法单元tag
+    * @throws IOException 语法错误
+    */
    void match(int t) throws IOException {
       if( look.tag == t ) move();
       else error("syntax error");
    }
-
-   public void program() throws IOException {  // program -> block
+   /**
+    * program -> block
+    * 先构建整棵抽象语法树，然后打印三地址码。
+    * @throws IOException
+    */
+   public void program() throws IOException {  
       Stmt s = block();
       int begin = s.newlabel();  int after = s.newlabel();
       s.emitlabel(begin);  s.gen(begin, after);  s.emitlabel(after);
    }
-
-   Stmt block() throws IOException {  // block -> { decls stmts }
+   /**
+    * block -> { decls stmts }
+    * 在进入block前，先保存环境变量，然后创建新的环境变量，退出时恢复环境变量。
+    * @return stmt地址
+    * @throws IOException
+    */
+   Stmt block() throws IOException { 
       match('{');  Env savedEnv = top;  top = new Env(top);
       decls(); Stmt s = stmts();
       match('}');  top = savedEnv;
@@ -41,7 +74,11 @@ public class Parser {
          used = used + p.width;
       }
    }
-
+   /**
+    * 基本类型
+    * @return 类型
+    * @throws IOException
+    */
    Type type() throws IOException {
 
       Type p = (Type)look;            // expect look.tag == Tag.BASIC 
@@ -49,7 +86,12 @@ public class Parser {
       if( look.tag != '[' ) return p; // T -> basic
       else return dims(p);            // return array type
    }
-
+   /**
+    * 数组类型
+    * @param p 数组基本类型
+    * @return 类型
+    * @throws IOException
+    */
    Type dims(Type p) throws IOException {
       match('[');  Token tok = look;  match(Tag.NUM);  match(']');
       if( look.tag == '[' )
@@ -63,7 +105,7 @@ public class Parser {
    }
 
    Stmt stmt() throws IOException {
-      Expr x;  Stmt s, s1, s2;
+      Expr x;  Stmt s1, s2;
       Stmt savedStmt;         // save enclosing loop for breaks
 
       switch( look.tag ) {
@@ -110,7 +152,11 @@ public class Parser {
          return assign();
       }
    }
-
+   /**
+    * 赋值语句，包括基本的赋值和数组元素赋值。
+    * @return 语句地址。
+    * @throws IOException
+    */
    Stmt assign() throws IOException {
       Stmt stmt;  Token t = look;
       match(Tag.ID);
@@ -127,7 +173,13 @@ public class Parser {
       match(';');
       return stmt;
    }
-
+   /**
+    * 布尔运算。
+    * 先做和运算，再做与运算。
+    * @return expr
+    * @throws IOException
+    * @see {@link #join()}
+    */
    Expr bool() throws IOException {
       Expr x = join();
       while( look.tag == Tag.OR ) {
@@ -135,7 +187,13 @@ public class Parser {
       }
       return x;
    }
-
+   /**
+    * 和运算。
+    * 先做等价运算，再做和运算。
+    * @return expr
+    * @throws IOExceptio 
+    * @see {@link #equality()}
+    */
    Expr join() throws IOException {
       Expr x = equality();
       while( look.tag == Tag.AND ) {
@@ -143,7 +201,13 @@ public class Parser {
       }
       return x;
    }
-
+   /**
+    * 等价运算。
+    * 先做关系运算，再做等价运算。
+    * @return expr
+    * @throws IOException
+    * @see {@link #rel()}
+    */
    Expr equality() throws IOException {
       Expr x = rel();
       while( look.tag == Tag.EQ || look.tag == Tag.NE ) {
@@ -151,7 +215,13 @@ public class Parser {
       }
       return x;
    }
-
+   /**
+    * 关系运算。
+    * 先做加减运算，再做关系运算。
+    * @return expr
+    * @throws IOException
+    * @see {@link #equality()}
+    */
    Expr rel() throws IOException {
       Expr x = expr();
       switch( look.tag ) {
@@ -161,7 +231,13 @@ public class Parser {
          return x;
       }
    }
-
+   /**
+    * 加减运算。
+    * 先做乘除运算，再做加减运算。
+    * @return expr
+    * @throws IOException
+    * @see {@link #term()}
+    */
    Expr expr() throws IOException {
       Expr x = term();
       while( look.tag == '+' || look.tag == '-' ) {
@@ -169,7 +245,13 @@ public class Parser {
       }
       return x;
    }
-
+   /**
+    * 乘除运算。
+    * 先做单目运算，再做乘除运算。
+    * @return expr
+    * @throws IOException
+    * @see {@link #unary()}
+    */
    Expr term() throws IOException {
       Expr x = unary();
       while(look.tag == '*' || look.tag == '/' ) {
@@ -177,7 +259,11 @@ public class Parser {
       }
       return x;
    }
-
+   /**
+    * 单目运算。
+    * @return expr
+    * @throws IOException
+    */
    Expr unary() throws IOException {
       if( look.tag == '-' ) {
          move();  return new Unary(Word.minus, unary());
@@ -187,7 +273,11 @@ public class Parser {
       }
       else return factor();
    }
-
+   /**
+    * 处理表达式因子
+    * @return expr
+    * @throws IOException
+    */
    Expr factor() throws IOException {
       Expr x = null;
       switch( look.tag ) {
@@ -206,7 +296,6 @@ public class Parser {
          error("syntax error");
          return x;
       case Tag.ID:
-         String s = look.toString();
          Id id = top.get(look);
          if( id == null ) error(look.toString() + " undeclared");
          move();
@@ -214,7 +303,12 @@ public class Parser {
          else return offset(id);
       }
    }
-
+   /**
+    * 数组元素偏移值计算
+    * @param a 数组id
+    * @return 数组地址
+    * @throws IOException
+    */
    Access offset(Id a) throws IOException {   // I -> [E] | [E] I
       Expr i; Expr w; Expr t1, t2; Expr loc;  // inherit id
 

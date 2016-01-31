@@ -1,6 +1,10 @@
 package inter;
-import lexer.*; import symbols.*;
-
+import symbols.Array;
+import symbols.Type;
+/**
+ * a[i] = expr数组元素的赋值语句
+ *
+ */
 public class SetElem extends Stmt {
 
    public Id array; public Expr index; public Expr expr;
@@ -16,7 +20,10 @@ public class SetElem extends Stmt {
       else if ( Type.numeric(p1) && Type.numeric(p2) ) return p2;
       else return null;
    }
-
+   /**
+    * 生成数组元素的赋值语句并打印。形如：<br>
+    * a[i] = expr<br>
+    */
    public void gen(int b, int a) {
       String s1 = index.reduce().toString();
       String s2 = expr.reduce().toString();
