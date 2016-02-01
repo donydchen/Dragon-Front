@@ -43,7 +43,7 @@ public class Parser {
       else error("syntax error");
    }
    /**
-    * program -> block
+    * program -> block<br>
     * 先构建整棵抽象语法树，然后打印三地址码。
     * @throws IOException
     */
@@ -53,7 +53,7 @@ public class Parser {
       s.emitlabel(begin);  s.gen(begin, after);  s.emitlabel(after);
    }
    /**
-    * block -> { decls stmts }
+    * block -> { decls stmts }<br>
     * 在进入block前，先保存环境变量，然后创建新的环境变量，退出时恢复环境变量。
     * @return stmt地址
     * @throws IOException
@@ -75,7 +75,7 @@ public class Parser {
       }
    }
    /**
-    * 基本类型
+    * 判断基本类型，通过match实现。
     * @return 类型
     * @throws IOException
     */
@@ -95,7 +95,7 @@ public class Parser {
    Type dims(Type p) throws IOException {
       match('[');  Token tok = look;  match(Tag.NUM);  match(']');
       if( look.tag == '[' )
-      p = dims(p);
+    	  p = dims(p);
       return new Array(((Num)tok).value, p);
    }
 
@@ -109,7 +109,7 @@ public class Parser {
       Stmt savedStmt;         // save enclosing loop for breaks
 
       switch( look.tag ) {
-
+      //此处有问题。作者为了实现if(bool);语句而设计的，但原文法并不允许，而且这将导致if(bool);else;等语句都合法，不太合理。
       case ';':
          move();
          return Stmt.Null;
@@ -174,7 +174,7 @@ public class Parser {
       return stmt;
    }
    /**
-    * 布尔运算。
+    * 布尔运算。<br>
     * 先做和运算，再做与运算。
     * @return expr
     * @throws IOException
@@ -188,7 +188,7 @@ public class Parser {
       return x;
    }
    /**
-    * 和运算。
+    * 和运算。<br>
     * 先做等价运算，再做和运算。
     * @return expr
     * @throws IOExceptio 
@@ -202,7 +202,7 @@ public class Parser {
       return x;
    }
    /**
-    * 等价运算。
+    * 等价运算。<br>
     * 先做关系运算，再做等价运算。
     * @return expr
     * @throws IOException
@@ -216,7 +216,7 @@ public class Parser {
       return x;
    }
    /**
-    * 关系运算。
+    * 关系运算。<br>
     * 先做加减运算，再做关系运算。
     * @return expr
     * @throws IOException
@@ -232,7 +232,7 @@ public class Parser {
       }
    }
    /**
-    * 加减运算。
+    * 加减运算。<br>
     * 先做乘除运算，再做加减运算。
     * @return expr
     * @throws IOException
@@ -246,7 +246,7 @@ public class Parser {
       return x;
    }
    /**
-    * 乘除运算。
+    * 乘除运算。<br>
     * 先做单目运算，再做乘除运算。
     * @return expr
     * @throws IOException

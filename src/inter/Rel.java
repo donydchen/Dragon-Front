@@ -5,7 +5,12 @@ import lexer.*; import symbols.*;
  *
  */
 public class Rel extends Logical {
-
+   /**
+    * 初始化比较运算
+    * @param tok 运算符
+    * @param x1 第一个运算数
+    * @param x2 第二个运算数
+    */
    public Rel(Token tok, Expr x1, Expr x2) { super(tok, x1, x2); }
    /**
     * 判断两个运算数的类型

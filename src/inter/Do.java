@@ -9,7 +9,11 @@ public class Do extends Stmt {
    Expr expr; Stmt stmt;
 
    public Do() { expr = null; stmt = null; }
-
+   /**
+    * 初始化do-while循环
+    * @param s stmt
+    * @param x expr
+    */
    public void init(Stmt s, Expr x) {
       expr = x; stmt = s;
       if( expr.type != Type.Bool ) expr.error("boolean required in do");

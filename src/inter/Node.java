@@ -36,5 +36,10 @@ public class Node {
     * 打印字符串。形式为“\t”。
     * @param s 待打印的字符串。
     */
-   public void emit(String s) { System.out.println("\t" + s); }
+   //static int cnt = 0;
+   public void emit(String s) {
+	   //cnt++;
+	   //System.out.println("\t" + lexline + "\t" + cnt + "\t" + s); 
+	   System.out.println("\t" + s);
+   }
 }
