@@ -8,7 +8,7 @@ public class And extends Logical {
 
    public And(Token tok, Expr x1, Expr x2) { super(tok, x1, x2); }
    /**
-    * 生成B1 && B2运算的三地址码并打印。B1和B2只要有一个为假，整个表达式就是假。形如：<br>
+    * 生成B1 &amp;&amp; B2运算的三地址码并打印。B1和B2只要有一个为假，整个表达式就是假。形如：<br>
     * iffalse expr1 goto label<br>
     * if expr2 goto Lt<br>
     * goto Lf<br>

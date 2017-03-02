@@ -22,6 +22,8 @@ clean:
 	(cd main; rm *.class)
 
 yacc:
-	/usr/ccs/bin/yacc -v doc/front.y
+	# /usr/ccs/bin/yacc -v doc/front.y
+	yacc -v doc/front.y
+
 	rm y.tab.c
 	mv y.output doc

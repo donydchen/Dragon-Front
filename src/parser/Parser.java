@@ -43,7 +43,7 @@ public class Parser {
       else error("syntax error");
    }
    /**
-    * program -> block<br>
+    * program {@literal ->} block<br>
     * 先构建整棵抽象语法树，然后打印三地址码。
     * @throws IOException
     */
