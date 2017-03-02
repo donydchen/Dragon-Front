@@ -1,7 +1,8 @@
 package inter;
 import lexer.*; import symbols.*;
 /**
- * 比较运算，如“<”, "=="等
+ * compare operation like {@literal ("<", "==")} ,etc
+ * compare operation like {@literal <}, {@literal ==}, etc
  *
  */
 public class Rel extends Logical {
